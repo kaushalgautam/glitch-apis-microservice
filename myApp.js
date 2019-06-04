@@ -16,6 +16,12 @@ console.log("Hello World");
 //   res.send("Hello Express");
 // });
 
+// root level middleware:
+app.use((req, res, next) => {
+  console.log(req.method, req.path, '-', req.ip);
+  next();
+});
+
 /** 3) Serve an HTML file */
 app.get('/', function(req, res) {
   let absolutePath = __dirname + '/views/index.html';
@@ -23,10 +29,19 @@ app.get('/', function(req, res) {
 });
 
 /** 4) Serve static assets  */
-
+let staticPath = __dirname + '/public';
+app.use(express.static(staticPath));
 
 /** 5) serve JSON on a specific route */
-
+app.get('/json', function(req, res) {
+  // let response = 'hello ',
+  if(process.env.MESSAGE_STYLE === 'uppercase') {
+    res.json({"message": "HELLO JSON"});  
+  } else {
+    res.json({"message": "Hello json"});      
+  }
+  
+})
 
 /** 6) Use the .env file to configure the app */
  
@@ -36,7 +51,13 @@ app.get('/', function(req, res) {
 
 
 /** 8) Chaining middleware. A Time server */
-
+app.get('/now', (req, res, next) => {
+  req.time = new Date().toString();
+  console.log(req.time);
+  next();
+  }, (req, res) => {
+  res.json({time: req.time});
+})
 
 /** 9)  Get input from client - Route parameters */
 
