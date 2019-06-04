@@ -60,7 +60,9 @@ app.get('/now', (req, res, next) => {
 })
 
 /** 9)  Get input from client - Route parameters */
-
+app.get('/:word/echo', (req, res) => {
+  res.json({word: req.params.word});
+})
 
 /** 10) Get input from client - Query parameters */
 // /name?first=<firstname>&last=<lastname>
